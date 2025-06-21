@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Costo de Pasaje</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .resultado {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 5px;
+      display: none;
+    }
+    .resultado.mostrar {
+      display: block;
+    }
+    .resultado.exito {
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+    .resultado.error {
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+    .tarifas {
+      background-color: #e9ecef;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .tarifas h3 {
+      margin-top: 0;
+      color: #495057;
+    }
+    .tarifas ul {
+      margin: 10px 0;
+      padding-left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Cálculo de Costo de Pasaje - Viaje de Estudios</h1>
+
+    <div class="tarifas">
+      <h3>Tarifas del Autobús:</h3>
+      <ul>
+        <li>Más de 100 alumnos: <strong>$20</strong> por alumno</li>
+        <li>Entre 50 y 100 alumnos: <strong>$35</strong> por alumno</li>
+        <li>Entre 20 y 49 alumnos: <strong>$40</strong> por alumno</li>
+        <li>Menos de 20 alumnos: <strong>$70</strong> por alumno</li>
+      </ul>
+    </div>
+
+    <div class="form-group">
+      <label for="numAlumnos">Número de alumnos:</label>
+      <input type="number" id="numAlumnos" min="1" placeholder="Ingrese el número de alumnos" />
+    </div>
+
+    <button onclick="calcularCosto()">Calcular Costo</button>
+
+    <div id="resultado" class="resultado">
+      <h3>Resultado:</h3>
+      <div id="contenidoResultado"></div>
+    </div>
+  </div>
+
+  <script>
+    function calcularCosto() {
+      const numAlumnos = parseInt(document.getElementById('numAlumnos').value);
+      const resultado = document.getElementById('resultado');
+      const contenido = document.getElementById('contenidoResultado');
+
+      if (isNaN(numAlumnos) || numAlumnos <= 0) {
+        resultado.className = 'resultado mostrar error';
+        contenido.innerHTML = '<p>Por favor, ingrese un número válido de alumnos mayor a 0.</p>';
+        return;
+      }
+
+      let costoPorAlumno;
+      let rango;
+
+      if (numAlumnos > 100) {
+        costoPorAlumno = 20;
+        rango = "Más de 100 alumnos";
+      } else if (numAlumnos >= 50 && numAlumnos <= 100) {
+        costoPorAlumno = 35;
+        rango = "Entre 50 y 100 alumnos";
+      } else if (numAlumnos >= 20 && numAlumnos <= 49) {
+        costoPorAlumno = 40;
+        rango = "Entre 20 y 49 alumnos";
+      } else {
+        costoPorAlumno = 70;
+        rango = "Menos de 20 alumnos";
+      }
+
+      const costoTotal = numAlumnos * costoPorAlumno;
+
+      resultado.className = 'resultado mostrar exito';
+      contenido.innerHTML = `
+        <p><strong>Número de alumnos:</strong> ${numAlumnos}</p>
+        <p><strong>Rango:</strong> ${rango}</p>
+        <p><strong>Costo por alumno:</strong> $${costoPorAlumno}</p>
+        <p><strong>Costo total del viaje:</strong> $${costoTotal}</p>
+      `;
+    }
+
+    document.getElementById('numAlumnos').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        calcularCosto();
+      }
+    });
+  </script>
+</body>
+</html>

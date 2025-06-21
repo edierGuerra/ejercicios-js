@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Convertir Calificación a Letra</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .resultado {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 5px;
+      display: none;
+    }
+    .resultado.mostrar {
+      display: block;
+    }
+    .resultado.exito {
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+    .resultado.error {
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+    .escalas {
+      background-color: #e9ecef;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .escalas h3 {
+      margin-top: 0;
+      color: #495057;
+    }
+    .escalas ul {
+      margin: 10px 0;
+      padding-left: 20px;
+    }
+    .letra-grande {
+      font-size: 48px;
+      font-weight: bold;
+      text-align: center;
+      margin: 20px 0;
+    }
+    .letra-a { color: #28a745; }
+    .letra-b { color: #17a2b8; }
+    .letra-c { color: #ffc107; }
+    .letra-d { color: #fd7e14; }
+    .letra-f { color: #dc3545; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Convertir Calificación Numérica a Letra</h1>
+
+    <div class="escalas">
+      <h3>Escala de Calificaciones:</h3>
+      <ul>
+        <li><strong>10</strong> = A (Excelente)</li>
+        <li><strong>9</strong> = B (Muy Bien)</li>
+        <li><strong>8</strong> = C (Bien)</li>
+        <li><strong>7-6</strong> = D (Regular)</li>
+        <li><strong>5-0</strong> = F (Reprobado)</li>
+      </ul>
+    </div>
+
+    <div class="form-group">
+      <label for="calificacion">Calificación (0-10):</label>
+      <input type="number" id="calificacion" min="0" max="10" step="0.1" placeholder="Ingrese la calificación" />
+    </div>
+
+    <button onclick="convertirCalificacion()">Convertir a Letra</button>
+
+    <div id="resultado" class="resultado">
+      <h3>Resultado:</h3>
+      <div id="contenidoResultado"></div>
+    </div>
+  </div>
+
+  <script>
+    function convertirCalificacion() {
+      const calificacion = parseFloat(document.getElementById('calificacion').value);
+      const resultado = document.getElementById('resultado');
+      const contenido = document.getElementById('contenidoResultado');
+
+      if (isNaN(calificacion) || calificacion < 0 || calificacion > 10) {
+        resultado.className = 'resultado mostrar error';
+        contenido.innerHTML = '<p>Por favor, ingrese una calificación válida entre 0 y 10.</p>';
+        return;
+      }
+
+      let letra, descripcion, claseLetra;
+
+      if (calificacion === 10) {
+        letra = "A";
+        descripcion = "Excelente";
+        claseLetra = "letra-a";
+      } else if (calificacion === 9) {
+        letra = "B";
+        descripcion = "Muy Bien";
+        claseLetra = "letra-b";
+      } else if (calificacion === 8) {
+        letra = "C";
+        descripcion = "Bien";
+        claseLetra = "letra-c";
+      } else if (calificacion >= 6 && calificacion <= 7) {
+        letra = "D";
+        descripcion = "Regular";
+        claseLetra = "letra-d";
+      } else {
+        letra = "F";
+        descripcion = "Reprobado";
+        claseLetra = "letra-f";
+      }
+
+      resultado.className = 'resultado mostrar exito';
+      contenido.innerHTML = `
+        <p><strong>Calificación numérica:</strong> ${calificacion}</p>
+        <div class="letra-grande ${claseLetra}">${letra}</div>
+        <p><strong>Descripción:</strong> ${descripcion}</p>
+      `;
+    }
+
+    document.getElementById('calificacion').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        convertirCalificacion();
+      }
+    });
+  </script>
+</body>
+</html>

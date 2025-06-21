@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Día de la Semana</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #6f42c1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #563d7c;
+    }
+    .resultado {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 5px;
+      display: none;
+    }
+    .resultado.mostrar {
+      display: block;
+    }
+    .resultado.exito {
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+    .resultado.error {
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+    .dias-semana {
+      background-color: #e9ecef;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .dias-semana h3 {
+      margin-top: 0;
+      color: #495057;
+    }
+    .dias-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .dia-item {
+      text-align: center;
+      padding: 10px;
+      background-color: #f8f9fa;
+      border-radius: 5px;
+      border: 1px solid #dee2e6;
+    }
+    .dia-numero {
+      font-weight: bold;
+      color: #6f42c1;
+    }
+    .dia-nombre {
+      font-size: 14px;
+      color: #6c757d;
+    }
+    .dia-grande {
+      font-size: 36px;
+      font-weight: bold;
+      text-align: center;
+      margin: 20px 0;
+      color: #6f42c1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Determinar Día de la Semana</h1>
+
+    <div class="dias-semana">
+      <h3>Correspondencia Número - Día:</h3>
+      <div class="dias-grid">
+        <div class="dia-item"><div class="dia-numero">1</div><div class="dia-nombre">Lunes</div></div>
+        <div class="dia-item"><div class="dia-numero">2</div><div class="dia-nombre">Martes</div></div>
+        <div class="dia-item"><div class="dia-numero">3</div><div class="dia-nombre">Miércoles</div></div>
+        <div class="dia-item"><div class="dia-numero">4</div><div class="dia-nombre">Jueves</div></div>
+        <div class="dia-item"><div class="dia-numero">5</div><div class="dia-nombre">Viernes</div></div>
+        <div class="dia-item"><div class="dia-numero">6</div><div class="dia-nombre">Sábado</div></div>
+        <div class="dia-item"><div class="dia-numero">7</div><div class="dia-nombre">Domingo</div></div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="numeroDia">Número del día (1-7):</label>
+      <input type="number" id="numeroDia" min="1" max="7" placeholder="Ingrese un número del 1 al 7" />
+    </div>
+
+    <button onclick="determinarDia()">Determinar Día</button>
+
+    <div id="resultado" class="resultado">
+      <h3>Resultado:</h3>
+      <div id="contenidoResultado"></div>
+    </div>
+  </div>
+
+  <script>
+    function determinarDia() {
+      const numeroDia = parseInt(document.getElementById('numeroDia').value);
+      const resultado = document.getElementById('resultado');
+      const contenido = document.getElementById('contenidoResultado');
+
+      if (isNaN(numeroDia) || numeroDia < 1 || numeroDia > 7) {
+        resultado.className = 'resultado mostrar error';
+        contenido.innerHTML = '<p>Por favor, ingrese un número válido del 1 al 7.</p>';
+        return;
+      }
+
+      let nombreDia = "";
+      let abreviatura = "";
+
+      switch (numeroDia) {
+        case 1:
+          nombreDia = "Lunes"; abreviatura = "L"; break;
+        case 2:
+          nombreDia = "Martes"; abreviatura = "M"; break;
+        case 3:
+          nombreDia = "Miércoles"; abreviatura = "Mi"; break;
+        case 4:
+          nombreDia = "Jueves"; abreviatura = "J"; break;
+        case 5:
+          nombreDia = "Viernes"; abreviatura = "V"; break;
+        case 6:
+          nombreDia = "Sábado"; abreviatura = "S"; break;
+        case 7:
+          nombreDia = "Domingo"; abreviatura = "D"; break;
+      }
+
+      resultado.className = 'resultado mostrar exito';
+      contenido.innerHTML = `
+        <p><strong>Número ingresado:</strong> ${numeroDia}</p>
+        <div class="dia-grande">${nombreDia}</div>
+        <p><strong>Abreviatura:</strong> ${abreviatura}</p>
+      `;
+    }
+
+    document.getElementById('numeroDia').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        determinarDia();
+      }
+    });
+  </script>
+</body>
+</html>

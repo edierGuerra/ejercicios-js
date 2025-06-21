@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bono por Profesores</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #c82333;
+        }
+        .resultado {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .resultado.mostrar {
+            display: block;
+        }
+        .resultado.exito {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .resultado.error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .tabla-puntos {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .tabla-puntos h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #dee2e6;
+        }
+        th {
+            background-color: #495057;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .monto-bono {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cálculo de Bono por Desempeño - Profesores</h1>
+        
+        <div class="tabla-puntos">
+            <h3>Tabla de Bonos por Puntuación:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Puntos</th>
+                        <th>Premio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0 - 100</td>
+                        <td>1 salario mínimo</td>
+                    </tr>
+                    <tr>
+                        <td>101 - 150</td>
+                        <td>2 salarios mínimos</td>
+                    </tr>
+                    <tr>
+                        <td>151 en adelante</td>
+                        <td>3 salarios mínimos</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="salarioMinimo">Salario Mínimo ($):</label>
+                <input type="number" id="salarioMinimo" min="0" step="0.01" placeholder="Ingrese el salario mínimo">
+            </div>
+            <div class="form-group">
+                <label for="puntos">Puntos del Profesor:</label>
+                <input type="number" id="puntos" min="0" placeholder="Ingrese los puntos obtenidos">
+            </div>
+        </div>
+
+        <button onclick="calcularBono()">Calcular Bono</button>
+
+        <div id="resultado" class="resultado">
+            <h3>Resultado:</h3>
+            <div id="contenidoResultado"></div>
+        </div>
+    </div>
+
+    <script>
+        function calcularBono() {
+            const salarioMinimo = parseFloat(document.getElementById('salarioMinimo').value);
+            const puntos = parseFloat(document.getElementById('puntos').value);
+            const resultado = document.getElementById('resultado');
+            const contenido = document.getElementById('contenidoResultado');
+
+            // Validar entradas
+            if (isNaN(salarioMinimo) || salarioMinimo <= 0) {
+                resultado.className = 'resultado mostrar error';
+                contenido.innerHTML = '<p>Por favor, ingrese un salario mínimo válido mayor a 0.</p>';
+                return;
+            }
+
+            if (isNaN(puntos) || puntos < 0) {
+                resultado.className = 'resultado mostrar error';
+                contenido.innerHTML = '<p>Por favor, ingrese una puntuación válida mayor o igual a 0.</p>';
+                return;
+            }
+
+            let multiplicador;
+            let categoria;
+
+            // Algoritmo para determinar el bono según los puntos
+            if (puntos >= 0 && puntos <= 100) {
+                multiplicador = 1;
+                categoria = "0 - 100 puntos";
+            } else if (puntos >= 101 && puntos <= 150) {
+                multiplicador = 2;
+                categoria = "101 - 150 puntos";
+            } else { // puntos >= 151
+                multiplicador = 3;
+                categoria = "151 puntos en adelante";
+            }
+
+            const montoBono = salarioMinimo * multiplicador;
+
+            resultado.className = 'resultado mostrar exito';
+            contenido.innerHTML = `
+                <p><strong>Puntos obtenidos:</strong> ${puntos}</p>
+                <p><strong>Categoría:</strong> ${categoria}</p>
+                <p><strong>Salario mínimo:</strong> $${salarioMinimo.toLocaleString()}</p>
+                <p><strong>Multiplicador:</strong> ${multiplicador} salario${multiplicador > 1 ? 's' : ''} mínimo${multiplicador > 1 ? 's' : ''}</p>
+                <div class=\"monto-bono\">Bono: $${montoBono.toLocaleString()}</div>
+            `;
+        }
+
+        // Permitir calcular con Enter en cualquier campo
+        document.getElementById('salarioMinimo').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calcularBono();
+            }
+        });
+
+        document.getElementById('puntos').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calcularBono();
+            }
+        });
+    </script>
+</body>
+</html>`
+}

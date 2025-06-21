@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <titde>Navideño</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+    .input-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #555;
+      font-size: 16px;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+    input[type="number"]:focus {
+      border-color: #667eea;
+      outline: none;
+    }
+    button {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      width: 100%;
+      margin-top: 20px;
+      transition: transform 0.2s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+    }
+    .resultado {
+      margin-top: 30px;
+      padding: 25px;
+      border-radius: 10px;
+      display: none;
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+      border: 2px solid #4CAF50;
+    }
+    .resultado.porcentaje-25 {
+      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+      border-color: #28a745;
+    }
+    .resultado.porcentaje-20 {
+      background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+      border-color: #ffc107;
+    }
+    .resultado-titulo {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-align: center;
+      color: #2c3e50;
+    }
+    .detalle {
+      background-color: rgba(255,255,255,0.8);
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+    .detalle-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    .detalle-item:last-child {
+      border-bottom: none;
+      font-weight: bold;
+      font-size: 18px;
+      color: #2c3e50;
+    }
+    .valor {
+      font-weight: bold;
+      color: #27ae60;
+    }
+    .criterio {
+      background-color: rgba(255,255,255,0.9);
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      border-left: 4px solid #3498db;
+    }
+    .criterio-titulo {
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+    .info-box {
+      background-color: #e8f4f8;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid #17a2b8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎄 Calculadora de Bono Navideño</h1>
+
+    <div class="info-box">
+      <strong>ℹ️ Criterios para el bono:</strong><br>
+      • <strong>25% del sueldo:</strong> Si antigüedad > 4 años O sueldo < $2,000<br>
+      • <strong>20% del sueldo:</strong> En caso contrario
+    </div>
+
+    <form id="formulario-bono">
+      <div class="input-group">
+        <label for="sueldo">Sueldo mensual del empleado:</label>
+        <input type="number" id="sueldo" placeholder="Ejemplo: 1500000" min="0" step="1000" required>
+      </div>
+
+      <div class="input-group">
+        <label for="antiguedad">📅 Años de antigüedad en la empresa:</label>
+        <input type="number" id="antiguedad" placeholder="Ejemplo: 5" min="0" step="0.5" required>
+      </div>
+
+      <button type="submit">Calcular Bono Navideño</button>
+    </form>
+
+    <div id="resultado" class="resultado">
+      <div id="contenido-resultado"></div>
+    </div>
+  </div>
+
+  <script>
+    function calcularBono(event) {
+      event.preventDefault();
+
+      const sueldo = parseFloat(document.getElementById('sueldo').value);
+      const antiguedad = parseFloat(document.getElementById('antiguedad').value);
+      const resultadoDiv = document.getElementById('resultado');
+      const contenidoDiv = document.getElementById('contenido-resultado');
+
+      if (isNaN(sueldo) || sueldo < 0) {
+        alert('Por favor, ingrese un sueldo válido mayor o igual a 0');
+        return;
+      }
+
+      if (isNaN(antiguedad) || antiguedad < 0) {
+        alert('Por favor, ingrese una antigüedad válida mayor o igual a 0');
+        return;
+      }
+
+      let porcentaje, razon, clase;
+
+      if (antiguedad > 4 || sueldo < 2000) {
+        porcentaje = 25;
+        clase = 'porcentaje-25';
+        if (antiguedad > 4 && sueldo < 2000) {
+          razon = 'Cumple ambos criterios: antigüedad mayor a 4 años Y sueldo menor a $2,000';
+        } else if (antiguedad > 4) {
+          razon = 'Antigüedad mayor a 4 años';
+        } else {
+          razon = 'Sueldo menor a $2,000';
+        }
+      } else {
+        porcentaje = 20;
+        clase = 'porcentaje-20';
+        razon = 'No cumple ninguno de los criterios especiales';
+      }
+
+      const montoBono = (sueldo * porcentaje) / 100;
+
+      const sueldoFormateado = new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 0
+      }).format(sueldo);
+
+      const bonoFormateado = new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 0
+      }).format(montoBono);
+
+      contenidoDiv.innerHTML = `
+        <div class="resultado-titulo">
+          🎁 Bono Navideño Calculado: ${porcentaje}%
+        </div>
+        <div class="detalle">
+          <div class="detalle-item">
+            <span>👤 Empleado:</span>
+            <span>Antigüedad: ${antiguedad} años</span>
+          </div>
+          <div class="detalle-item">
+            <span>💼 Sueldo mensual:</span>
+            <span class="valor">${sueldoFormateado}</span>
+          </div>
+          <div class="detalle-item">
+            <span>📊 Porcentaje de bono:</span>
+            <span class="valor">${porcentaje}%</span>
+          </div>
+          <div class="detalle-item">
+            <span>🎄 Monto del bono:</span>
+            <span class="valor">${bonoFormateado}</span>
+          </div>
+        </div>
+        <div class="criterio">
+          <div class="criterio-titulo">📋 Criterio aplicado:</div>
+          ${razon}
+        </div>
+      `;
+
+      resultadoDiv.className = `resultado ${clase}`;
+      resultadoDiv.style.display = 'block';
+      resultadoDiv.scrollIntoView({ behavior: 'smooth' });
+
+      console.log(`Cálculo realizado:
+        Sueldo: ${sueldo}
+        Antigüedad: ${antiguedad} años
+        Porcentaje: ${porcentaje}%
+        Bono: ${montoBono}
+        Razón: ${razon}`);
+    }
+
+    document.getElementById('formulario-bono').addEventListener('submit', calcularBono);
+
+    document.getElementById('sueldo').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('antiguedad').focus();
+      }
+    });
+
+    document.getElementById('antiguedad').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        calcularBono(e);
+      }
+    });
+
+  </script>
+</body>
+</html>
